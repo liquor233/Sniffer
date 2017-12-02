@@ -1,0 +1,3 @@
+1. create exception handling
+- socket create failed error
+2. to bind NIC to the sniffer
