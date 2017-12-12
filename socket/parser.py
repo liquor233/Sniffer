@@ -20,13 +20,11 @@ class Parser:
 		dst_mac = eth[0].encode('hex')
 		src_mac = eth[1].encode('hex')
 		eth_type = binascii.hexlify(eth[2])
-		print '------------------------new line----------------------------------'
-		print "Destination MAC:"+self.mac_parse(dst_mac)+"\tSource MAC:"+self.mac_parse(src_mac)+"\tprotocal type:"+eth_type
 		if(eth_type=='0800'):
 			self.ip_parse(frame)
 		elif (eth_type=='0806'):
 			self.arp_parse(frame)
-		else: print 'you son of bitch'
+		else: error('unknown eth type') 
 	
 	def mac_parse(self,mac):
 		out = ':'.join([mac[i : i + 2] for i in range(0, len(mac), 2)]) 
@@ -42,16 +40,13 @@ class Parser:
 	def tcp_parse(self,packet):
             	tcph_main = packet[0:20]
 		tcph = unpack('!HHLLBBHHH' , tcph_main)
-
             	src_port = tcph[0]
             	dst_port = tcph[1]
             	sequence = tcph[2]
             	acknowledgement = tcph[3]
             	doff_reserved = tcph[4]
             	tcph_length = (doff_reserved >> 4)*4
-		print 'Source Port : ' + str(src_port) + ' Dest Port : ' + str(dst_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
 		data = packet[tcph_length:]
-		print 'data:'+data
 
 	def udp_parse(self,packet):
             	udp_header = packet[0:8]
@@ -62,9 +57,7 @@ class Parser:
             	dst_port = udph[1]
             	length = udph[2]
             	checksum = udph[3]
-		print 'Source Port : ' + str(src_port) + ' Dest Port : ' + str(dst_port) + ' Length : ' + str(length) + ' Checksum : ' + str(checksum)
 		data = packet[udp_length:]
-		print 'data:'+data
 
 
 	def ip4_parse(self,ipframe):
@@ -76,10 +69,8 @@ class Parser:
 		ttl = iph_main[5]
 		protocol = iph_main[6]
 		iph_option = ipframe[20:ihl]
-		s_addr=inet_ntoa(iph_main[8])
+		s_addr = inet_ntoa(iph_main[8])
 		d_addr = inet_ntoa(iph_main[9])
-		
-		print '\tsource address is:'+str(s_addr)+'\tdestination address is:'+str(d_addr)+"\tprotocol is:"+str(protocol)
 		
 		frame = ipframe[ihl:]
 		if(protocol==1):
@@ -91,14 +82,14 @@ class Parser:
 		elif(protocol==17):
 			self.udp_parse(frame)
 		else: 
-			print 'not support protocol'
-			print 'the payload is ' + frame
+			error('not supported ipv4 type')
 
 	def ip6_parse(self,ipframe):
-		print 'you son of bitch'
+		error('not decided yet')
 
 	def arp_parse(self,ipframe):
-		print 'you son of bitch'
+		error('not decided yet')
+
 
 	
 	def icmp_parse(self,packet):
@@ -108,15 +99,14 @@ class Parser:
             	icmp_type = icmph[0]
             	code = icmph[1]
             	checksum = icmph[2]
-
-            	print 'Type : ' + str(icmp_type) + ' Code : ' + str(code) + ' Checksum : ' + str(checksum)
 		data = packet[4:]
-		print 'data:'+data
 
 
 	def igmp_parse(self,frame):
-		print 'you son of bitch'
+		error('not decided yet')
 		 
+def error(message)
+	print message
 		
 # some parameter defination
 device = 'ens33'
@@ -129,6 +119,6 @@ sniffer=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_ALL))
 while True:
 	packet,what = sniffer.recvfrom(MTU)# tuple unpack use _ 
 	print what
-	c = Parser(packet)
-	c.StartParser()
-	break # for debug
+	#c = Parser(packet)
+	#c.StartParser()
+	#break # for debug
