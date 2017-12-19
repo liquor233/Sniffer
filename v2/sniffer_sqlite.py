@@ -3,7 +3,7 @@
 #insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)   抓包的同时调用，将数据存入数据库
 #filter_db(srcip,dstip,sport,proco)                         查询过滤函数，返回的是表格中每行数据的序号，【】格式
 #detail_packet(no)                                          输入序号，返回packet
-#save_txt()                                                 将数据库中除packet外的具体信息输出至指定文件名文件中，raw_input()函数获取用户输入文件名
+#save_txt(file_name)                                                 将数据库中除packet外的具体信息输出至指定文件名文件中，raw_input()函数获取用户输入文件名
 import sqlite3 as sq
 from prettytable import PrettyTable
 
