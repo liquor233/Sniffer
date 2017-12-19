@@ -5,12 +5,15 @@ import subprocess, re
 def get_nic_list():
 	config = subprocess.check_output("ifconfig")
 	expr = re.compile("([a-zA-Z0-9]+)\s+Link")
-	interfaces = expr.findall(config)
+	interfaces=['any']
+	interfaces+=expr.findall(config)
 	return interfaces
+
+
 if __name__=="__main__":
-	from ui_mainwindow2 import Ui_Capture2
+	from ui_mainwindow import Ui_Capture
 	from PyQt4.QtGui import *
-	class Window(QMainWindow,Ui_Capture2):
+	class Window(QMainWindow,Ui_Capture):
         	def __init__(self,parent=None):
                 	super(Window, self).__init__(parent)
                 	self.setupUi(self)

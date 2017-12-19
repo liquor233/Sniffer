@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
+    <width>1242</width>
     <height>770</height>
    </rect>
   </property>
@@ -21,23 +21,56 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="openFButton">
-        <property name="text">
-         <string>&amp;open</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="saveFButton">
+       <widget class="QPushButton" name="saveButton">
         <property name="text">
          <string>&amp;save</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="TimeL">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="Ctime">
         <property name="text">
          <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -116,6 +149,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="RepacketButton">
+        <property name="text">
+         <string>&amp;IpRecombine</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="FilterButton">
         <property name="enabled">
          <bool>true</bool>
@@ -134,11 +174,29 @@
         <property name="accessibleName">
          <string/>
         </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOn</enum>
+        </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
+        <property name="alternatingRowColors">
+         <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="horizontalScrollMode">
+         <enum>QAbstractItemView::ScrollPerItem</enum>
+        </property>
         <property name="sortingEnabled">
          <bool>true</bool>
+        </property>
+        <property name="columnCount">
+         <number>1</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
          <number>230</number>
@@ -149,15 +207,31 @@
         <attribute name="horizontalHeaderStretchLastSection">
          <bool>true</bool>
         </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderHighlightSections">
+         <bool>true</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Packet Captured</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item>
-       <widget class="QListWidget" name="listWidget">
-        <item>
-         <property name="text">
-          <string>hu</string>
-         </property>
-        </item>
+       <widget class="QTextBrowser" name="DetailViewer">
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;afsdasfjgsdklssgfdkjldfksj;dakfj;dsklfjdkjsklfxjdslkfjaklfgdjf;lkjf;dslkjf;lksdaf;kjafsdlkjfks;aljdfalkgdshgj;fdklaj;f;sdklfjkgdljfakljfjfsdlkghfgjdlkfa;lljfsd;ljklajlpk;sdjf;sfdljkja;fdkslj&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -169,7 +243,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1061</width>
+     <width>1242</width>
      <height>31</height>
     </rect>
    </property>
@@ -189,22 +263,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>exitButton</sender>
-   <signal>clicked()</signal>
-   <receiver>menubar</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>911</x>
-     <y>68</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>866</x>
-     <y>8</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>CaptureButton</sender>
    <signal>toggled(bool)</signal>
@@ -234,6 +292,22 @@
     <hint type="destinationlabel">
      <x>1050</x>
      <y>109</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Capture</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>872</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>973</x>
+     <y>-36</y>
     </hint>
    </hints>
   </connection>

@@ -2,12 +2,20 @@ from socket import *
 #from sniffer_sqlite import *
 import struct
 
-def capture(nic,pp):
-  sniffer=socket(AF_PACKET,SOCK_RAW,htons(0x0003))
-  if nic != 'any':sniffer.bind((nic,0))
-  while(True):
-    packet,_=sniffer.recvfrom(65565)
-    pp.send(packet)
+class CountdownTask:
+  def __init__(self):
+    self._running = True
+
+  def terminate(self):
+    self._running = False
+
+  def run(self,nic,pp):
+    self._running = True
+    sniffer=socket(AF_PACKET,SOCK_RAW,htons(0x0003))
+    if nic != 'any':sniffer.bind((nic,0))
+    while(self._running):
+      packet,_=sniffer.recvfrom(65565)
+      pp.put(packet)
 
 def GetProtoType(Packet):
   #this is a function to get proto type
@@ -24,7 +32,7 @@ def GetProtoType(Packet):
 
   srcport,dstport=('-1','-1')
 
-  pstack.append('ethernet')
+  pstack.append('ethernet');ptype=0
   if ethtype[0]==0x800:
     pstack.append('ip4')
     iproto=struct.unpack("!B",Packet[9])
@@ -35,7 +43,7 @@ def GetProtoType(Packet):
         pstack.append(tcpdict[str(dstport)])
       elif srcport in tcpport:
         pstack.append(tcpdict[str(srcport)])
-      else : pstack.append('-1')
+      else : pstack.append('-1');ptype='tcp'
     elif iproto[0]==17:
       pstack.append('udp')
       srcport,dstport=struct.unpack("!2H",Packet[20:24])
@@ -43,15 +51,15 @@ def GetProtoType(Packet):
         pstack.append(udpdict[str(dstport)])
       elif srcport in udpport:
         pstack.append(udpdict[str(srcport)])
-      else : pstack.append('-1')
+      else : pstack.append('-1');ptype='udp'
     elif iproto[0]==2:
-      pstack.append('igmp')
+      pstack.append('igmp');ptype='igmp'
     elif iproto[0]==1:
-      pstack.append('icmp')
-    else : pstack.append('-1')
+      pstack.append('icmp');ptype='icmp4'
+    else : pstack.append('-1');ptype='ip4'
   elif ethtype[0]==0x806:
     pstack.append('arp')
-    pstack.append('-1')
+    pstack.append('-1');ptype='arp'
   elif ethtype[0]==0x86dd:
     pstack.append('ip6')
     iproto=struct.unpack("!B",Packet[6])
@@ -62,22 +70,23 @@ def GetProtoType(Packet):
         pstack.append(tcpdict[str(dstport)])
       elif srcport in tcpport:
         pstack.append(tcpdict[str(srcport)])
-      else : pstack.append('-1')
+      else : pstack.append('-1');ptype='tcp'
     elif iproto[0]==17:
       pstack.append('udp')
       srcport,dstport=struct.unpack("!2H",Packet[40:44])
       if dstport in tcpport:
-        pstack.append(udpdict[str(dstport)])
+        pstack.append(tcpdict[str(dstport)])
       elif srcport in udpport:
         pstack.append(udpdict[str(srcport)])
-      else : pstack.append('-1')
+      else : pstack.append('-1');ptype='udp'
     elif iproto[0]==2:   
-      pstack.append('igmp')
+      pstack.append('igmp');ptype='igmp'
     elif iproto[0]==58:
-      pstack.append('icmp')
-    else : pstack.append('-1')
-  else:pstack.append('-1');pstack.append('-1')
-  return pstack[:3],pstack[-1],srcport,dstport
+      pstack.append('icmp');ptype='icmp6'
+    else : pstack.append('-1');ptype='ip6'
+  else:pstack.append('-1');pstack.append('-1');ptype='ethernet'
+  if not ptype:ptype=pstack[-1]
+  return pstack[:3],ptype,srcport,dstport
 
 def GetIp(Packet,stack):
   Packet=Packet[14:]
@@ -106,13 +115,17 @@ if __name__=="__main__":
         no=no+1
 	stack,ptype,sport,dport = GetProtoType(packet)
  	srcip,dstip=GetIp(packet,stack)
- 	message=ptype+'\t'
-	if srcip!='-1' and dstip!='-1':
- 	  message+='src ip is: '+srcip+'\tdst ip is: '+dstip
-	if sport!='-1' and dport!='-1':
- 	  message+='src port is: '+str(sport)+'\tdst port is: '+str(dport)
+ 	message=ptype
+	if srcip!='-1':
+ 	  message+='\tFrom '+srcip
+	if sport !='-1':
+	  message+=':'+str(sport)
+	if dstip != '-1':
+	  message+='\tTo: '+dstip
+	if dport!='-1':
+ 	  message+=': '+str(dport)
     	print message
     # here insert your database function
     # those segment should be saved:packet,stack,sport,dport,ptype
     # srcip,dstip
-    #    insert_db(no,packet,srcip,dstip,sport,dprt,ptype,stack)
+        insert_db(no,packet,srcip,dstip,sport,dprt,ptype,stack)
