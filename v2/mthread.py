@@ -1,5 +1,5 @@
 from socket import *
-#from sniffer_sqlite import *
+from sniffer_sqlite import *
 import struct
 
 class CountdownTask:
@@ -101,31 +101,38 @@ def GetIp(Packet,stack):
     dstip = inet_ntoa(packet[1])
   return srcip,dstip
 
+def GetRecombination(Packet):
+  packet = struct.unpack("!2H",Packet[18:22])
+  identification = packet[0]
+  flag = packet[1]>>13
+  flagoffset = packet[1] & 0x1FFF
+  DF = (flag>>1) & 0x1
+  MF = flag & 0x1
+  return identification,DF,MF,flagoffset
+
 if __name__=="__main__":
-    from multiprocessing import Pipe,Process
-    import os
-    pr,ps=Pipe(0)
-    w = Process(target=capture,args=('any',ps,))
-    w.start()
-#database initialize
-    no=0
-    #sqlite_start()
-    while(True):
-        packet = pr.recv()
-        no=no+1
-	stack,ptype,sport,dport = GetProtoType(packet)
- 	srcip,dstip=GetIp(packet,stack)
- 	message=ptype
-	if srcip!='-1':
- 	  message+='\tFrom '+srcip
-	if sport !='-1':
-	  message+=':'+str(sport)
-	if dstip != '-1':
-	  message+='\tTo: '+dstip
-	if dport!='-1':
- 	  message+=': '+str(dport)
-    	print message
-    # here insert your database function
-    # those segment should be saved:packet,stack,sport,dport,ptype
-    # srcip,dstip
-        insert_db(no,packet,srcip,dstip,sport,dprt,ptype,stack)
+		import os
+		no=0
+                #sqlite_start()
+		if os.path.isfile('main.db') : os.remove('main.db')
+                while(True):
+                        sniffer=socket(AF_PACKET,SOCK_RAW,htons(0x0003))
+			packet,_=sniffer.recvfrom(65565)
+                        no=no+1
+                        stack,ptype,sport,dport = GetProtoType(packet)
+                        srcip,dstip=GetIp(packet,stack)
+                        message=ptype
+                        if srcip!='-1':
+                                message+='\tFrom '+srcip
+                        if sport !='-1':
+                                message+=':'+str(sport)
+                        if dstip != '-1':
+                                message+=' To: '+dstip
+                        if dport!='-1':
+                                message+=': '+str(dport)
+                        #print message
+		#	insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)
+ 			if 'ip4' in stack and 'ip4' != ptype:
+				identification,DF,MF,flagoffset=GetRecombination(packet)
+				print identification,DF,MF,flagoffset
+				#insert_ip(no,identification,DF,MF,flagoffset)
