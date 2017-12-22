@@ -263,12 +263,38 @@ def ipv6Decoder(Packet):
     message+=error(nextProto)
   return message
 
+def arpHeader(Packet):
+  packet = struct.unpack("!2H2BH6s4s6s4s",Packet)
+  hardtype = packet[0]
+  prototype = packet[1]
+  hardaddresslen = packet[2]
+  protocollen = packet[3]
+  opercode = packet[4]
+  srcMac = binascii.hexlify(packet[5])
+  srcAddress = socket.inet_ntoa(packet[6])
+  dstMac = binascii.hexlify(packet[7])
+  dstAddress = socket.inet_ntoa(packet[8])
+  message= fmt.format("ARP HEADER")+tag
+  message+= "\thardware type is: "+str(hardtype)+tag
+  message+= "\tprotocol type is: "+str(prototype)+tag
+  message+= "\thardware address length is: "+str(hardaddresslen)+tag
+  message+= "\tprotocol length is: "+str(protocollen)+tag
+  message+= "\topercode is: "+str(opercode)+tag
+  message+= "\tsource MAC: "+srcMac[0:2]+":"+srcMac[0:2]+":"+srcMac[2:4]+":"+srcMac[4:6]+":"+srcMac[6:8]+":"+srcMac[8:10]+":"+srcMac[10:]+tag
+  message+= "\tSource Address: "+srcAddress +tag
+  message+= "\tDestination MAC: "+dstMac[0:2]+":"+dstMac[0:2]+":"+dstMac[2:4]+":"+dstMac[4:6]+":"+dstMac[6:8]+":"+dstMac[8:10]+":"+dstMac[10:]+tag
+  message+= "\tDestination Address: "+dstAddress +tag
+  return message
+
+
+    
+
 def GetDetail(receivedRawPacket):
   resultingPacket,proto,message=etherHeader(receivedRawPacket)
   if (proto=='IPV4'):
     message+=ipv4Decoder(resultingPacket)
-  #elif (proto=='ARP'):
-  # newPacket,nextProto = arpHeader(resultingPacket)
+  elif (proto=='ARP'):
+    message += arpHeader(resultingPacket)
   elif (proto=='IPV6'):
     message+=ipv6Decoder(resultingPacket)
   else:
