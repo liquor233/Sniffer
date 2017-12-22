@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FDialog</class>
+ <widget class="QDialog" name="FDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>272</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FilterDialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>ProtolType</string>
+       </property>
+       <property name="buddy">
+        <cstring>TypeChooser</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="TypeChooser">
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ip6</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ip4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>arp</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>icmp6</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>icmp4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>tcp</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>udp</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DNS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HTTP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>FTP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>POP3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SSH</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>TELNET</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HTTPS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SMTP</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Source Ip:</string>
+       </property>
+       <property name="buddy">
+        <cstring>Sourceip</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="Sourceip"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Destination Ip</string>
+       </property>
+       <property name="buddy">
+        <cstring>Destinationip</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="Destinationip"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Source tcp/udp Port</string>
+       </property>
+       <property name="buddy">
+        <cstring>Destinationport</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="Destinationport"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>FDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>FDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

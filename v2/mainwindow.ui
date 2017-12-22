@@ -21,9 +21,19 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="saveButton">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>&amp;save</string>
+         <string>choose NIC</string>
+        </property>
+        <property name="buddy">
+         <cstring>NIChooser</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="NIChooser">
+        <property name="editable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -61,11 +71,11 @@
        </spacer>
       </item>
       <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string>&amp;save</string>
         </property>
-       </spacer>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label">
@@ -85,36 +95,6 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>choose NIC</string>
-        </property>
-        <property name="buddy">
-         <cstring>NIChooser</cstring>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="NIChooser">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item>
        <widget class="QPushButton" name="CaptureButton">
         <property name="text">
@@ -147,6 +127,39 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <family>AR PL UKai TW</family>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="text">
+         <string>Copyright@ 简夏 &amp; 杰宝</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="SearchButton">
+        <property name="text">
+         <string>search</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="RepacketButton">
@@ -196,10 +209,10 @@
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>1</number>
+         <number>2</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>230</number>
+         <number>80</number>
         </attribute>
         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
          <bool>true</bool>
@@ -213,6 +226,18 @@
         <attribute name="verticalHeaderHighlightSections">
          <bool>true</bool>
         </attribute>
+        <column>
+         <property name="text">
+          <string>no</string>
+         </property>
+         <property name="background">
+          <color>
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
         <column>
          <property name="text">
           <string>Packet Captured</string>
@@ -230,7 +255,7 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;afsdasfjgsdklssgfdkjldfksj;dakfj;dsklfjdkjsklfxjdslkfjaklfgdjf;lkjf;dslkjf;lksdaf;kjafsdlkjfks;aljdfalkgdshgj;fdklaj;f;sdklfjkgdljfakljfjfsdlkghfgjdlkfa;lljfsd;ljklajlpk;sdjf;sfdljkja;fdkslj&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -261,6 +286,18 @@ p, li { white-space: pre-wrap; }
    </attribute>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>FilterButton</tabstop>
+  <tabstop>exitButton</tabstop>
+  <tabstop>NIChooser</tabstop>
+  <tabstop>CaptureButton</tabstop>
+  <tabstop>DetailButton</tabstop>
+  <tabstop>RepacketButton</tabstop>
+  <tabstop>saveButton</tabstop>
+  <tabstop>MainTable</tabstop>
+  <tabstop>DetailViewer</tabstop>
+  <tabstop>SearchButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -270,12 +307,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>109</y>
+     <x>94</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
      <x>177</x>
-     <y>109</y>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -286,12 +323,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>109</y>
+     <x>94</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1050</x>
-     <y>109</y>
+     <x>1231</x>
+     <y>115</y>
     </hint>
    </hints>
   </connection>
@@ -302,12 +339,60 @@ p, li { white-space: pre-wrap; }
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>872</x>
+     <x>1231</x>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
      <x>973</x>
      <y>-36</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CaptureButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SearchButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>998</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CaptureButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>RepacketButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1070</x>
+     <y>99</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CaptureButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>saveButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1080</x>
+     <y>59</y>
     </hint>
    </hints>
   </connection>

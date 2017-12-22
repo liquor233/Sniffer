@@ -1,9 +1,10 @@
-#coding:utf-8 #initial_db()                                               初始化建立或链接数据库
+#coding:utf-8 #initial_db()                                 初始化建立或链接数据库
 #sqlite_start()                                             清空已有数据库中表格数据，每次抓包开始前调用
 #insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)   抓包的同时调用，将数据存入数据库
-#filter_db(srcip,dstip,sport,proco)                         查询过滤函数，返回的是表格中每行数据的序号，【】格式
+#filter_db(srcip,dstip,sport,proco)                         显示过滤函数（源地址，目的地址，源端口，协议类型）返回的是表格中每行数据的序号，【】格式
 #detail_packet(no)                                          输入序号，返回packet
-#save_txt(file_name)                                                 将数据库中除packet外的具体信息输出至指定文件名文件中，raw_input()函数获取用户输入文件名
+#save_txt(file_name)                                        将数据库中除packet外的具体信息输出至指定文件名文件中，raw_input()函数获取用户输入文件名
+#msg_find(msg)												输入查找的字符串，返回包含字符串的包的序号
 import sqlite3 as sq
 from prettytable import PrettyTable
 
@@ -217,6 +218,18 @@ def detail_packet(sno):
 
     return result
 
+def information_packet(sno):
+    conn_db=sq.connect('main.db')
+    cursor_db=conn_db.cursor()
+    conn_db.text_factory=str
+
+    reserch=cursor_db.execute("SELECT srcip,dstip,sport,dport,ptype FROM pcap WHERE no=:sno",{"sno":sno})
+    result=reserch.fetchone()
+    cursor_db.close()
+    conn_db.close()
+
+    return result
+
 def save_txt(file_name):
     conn_db=sq.connect('main.db')
     cursor_db=conn_db.cursor()
@@ -240,3 +253,23 @@ def save_txt(file_name):
     f.close()
     cursor_db.close()
     conn_db.close()
+
+def msg_find(msg):
+    conn_db=sq.connect('main.db')
+    cursor_db=conn_db.cursor()
+    conn_db.text_factory=str
+
+    result=[]
+
+    reserch=cursor_db.execute("SELECT no,packet FROM pcap")
+    reserch_no=reserch.fetchall()
+
+    for row in reserch_no:
+        if(row[1].find(msg)!=-1):
+            result.append(row[0])
+
+    cursor_db.close()
+    conn_db.close()
+
+
+    return result

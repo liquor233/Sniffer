@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from __future__ import division
-from __future__ import print_function
+#from __future__ import print_function
 from __future__ import unicode_literals
 from future_builtins import *
 
@@ -15,7 +15,8 @@ from Queue import Queue
 
 from ui_mainwindow import Ui_Capture
 from interfaces import get_nic_list
-
+from maindialog import SDialog
+from maindialog import FDialog
 
 class InitialWindow(QMainWindow,Ui_Capture):
 	def __init__(self,parent=None):
@@ -28,7 +29,8 @@ class InitialWindow(QMainWindow,Ui_Capture):
 		self.setWindowIcon(QIcon('../icon/mask.ico'))
 		self.MainTable.setEditTriggers(QAbstractItemView.NoEditTriggers)	
 		self.NIChooser.addItems(QStringList(get_nic_list()))
-		
+	
+		self.MainTable.verticalHeader().setVisible(False)	
 		#signal-slot
 		self.DetailButton.clicked.connect(self.show_detail);
 		self.MainTable.cellDoubleClicked.connect(self.show_detail);
@@ -44,9 +46,25 @@ class InitialWindow(QMainWindow,Ui_Capture):
         	
 			message='you silly'
                 	self.MainTable.setRowCount(1)
-			self.MainTable.setItem(0,0,QTableWidgetItem(QString(message)))
+			self.MainTable.setItem(0,1,QTableWidgetItem(QString(message)))
+			message=1
+			self.MainTable.setItem(0,0,QTableWidgetItem(QString(str(message))))
 		else:
                         self.CaptureButton.setText(QString("begin"))
+			print int(self.MainTable.item(0,0).text())
+			print type(int(self.MainTable.item(0,0).text()))
+	
+	@Slot()
+	def on_SearchButton_clicked(self):
+		dialog = SDialog(parent=self);
+ 		if dialog.exec_():
+			print dialog.searchtext()
+	
+	@Slot()
+	def on_FilterButton_clicked(self):
+		dialog = FDialog(parent=self);
+ 		if dialog.exec_():
+			print dialog.GetCondition()
 	
 	def show_detail(self):
 		m = self.MainTable.currentRow()
@@ -58,7 +76,6 @@ class InitialWindow(QMainWindow,Ui_Capture):
 
 	def file_save(self):
 		name = QFileDialog.getSaveFileName(self, 'Save File')
-		print name
 
 if __name__ == "__main__":
 	import sys

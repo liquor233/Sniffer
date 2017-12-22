@@ -5,7 +5,7 @@ import binascii
 
 #for format output
 star='*'*20
-fmt = star+"{0:^15}"+star
+fmt = star+"{0:^18}"+star
 tag='\r\n'
 
 def etherHeader(packet):
@@ -134,7 +134,7 @@ def icmp6Header(newPacket):
   message+= "\tCode: " + str(packet[1])+tag
   message+= "\tchecksum: "+str(packet[2])+tag
   data = newPacket[4:]
-  printdata(data)
+  message+=printdata(data)
   return message
 
 def igmpHeader(newPacket):
@@ -270,7 +270,7 @@ def GetDetail(receivedRawPacket):
   #elif (proto=='ARP'):
   # newPacket,nextProto = arpHeader(resultingPacket)
   elif (proto=='IPV6'):
-    ipv6Decoder(resultingPacket)
+    message+=ipv6Decoder(resultingPacket)
   else:
     message+=error("unsupported proto! num is\t"+proto)
   return message
