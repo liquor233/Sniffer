@@ -116,5 +116,5 @@ class Ui_FDialog(object):
         self.TypeChooser.setItemText(15, _translate("FDialog", "SMTP", None))
         self.label_2.setText(_translate("FDialog", "Source Ip:", None))
         self.label_3.setText(_translate("FDialog", "Destination Ip", None))
-        self.label_4.setText(_translate("FDialog", "Source tcp/udp Port", None))
+        self.label_4.setText(_translate("FDialog", "Destination Port", None))
 

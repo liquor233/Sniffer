@@ -28,7 +28,8 @@ def initial_db():
                     (no int NOT NULL,
                     layer_first char NOT NULL,
                     layer_second char NOT NULL,
-                    layer_third char NOT NULL);''')
+                    layer_third char NOT NULL,
+                    layer_fourth char NOT NULL);''')
 
     conn_db.commit()
     cursor_db.close()
@@ -56,7 +57,8 @@ def sqlite_start():
                     (no int NOT NULL,
                     layer_first char NOT NULL,
                     layer_second char NOT NULL,
-                    layer_third char NOT NULL);''')
+                    layer_third char NOT NULL,
+                    layer_fourth char NOT NULL);''')
 
     conn_db.commit()
     cursor_db.close()
@@ -70,13 +72,13 @@ def insert_db(sno,spacket,ssrcip,sdstip,ssport,sdport,sptype,sstack):
     conn_db.text_factory=str
 
     cursor_db.execute("INSERT INTO pcap VALUES (?,?,?,?,?,?,?)",(sno,spacket,ssrcip,sdstip,ssport,sdport,sptype))
-    cursor_db.execute("INSERT INTO stack VALUES (?,?,?,?)",(sno,sstack[0],sstack[1],sstack[2]))
+    cursor_db.execute("INSERT INTO stack VALUES (?,?,?,?,?)",(sno,sstack[0],sstack[1],sstack[2],sstack[3]))
 
     conn_db.commit()
     cursor_db.close()
     conn_db.close()
 
-def filter_db(fsrcip,fdstip,fsport,fproco):
+def filter_db(fsrcip,fdstip,fdport,fproco):
     conn_db=sq.connect('main.db')
     cursor_db=conn_db.cursor()
 
@@ -89,7 +91,7 @@ def filter_db(fsrcip,fdstip,fsport,fproco):
     if(fdstip=='-1'):
         sort[1]=0
     else: sort[1]=1
-    if(fsport=='-1'):
+    if(fdport=='-1'):
         sort[2]=0
     else: sort[2]=1
     if(fproco=='-1'):
@@ -112,15 +114,15 @@ def filter_db(fsrcip,fdstip,fsport,fproco):
             result.append(row[0])
 
     elif(sort==[0,0,1,0]):
-        reserch=cursor_db.execute("SELECT no FROM pcap WHERE sport=:fsport",{"fsport":fsport})
+        reserch=cursor_db.execute("SELECT no FROM pcap WHERE sport=:fdport",{"fdport":fdport})
         for row in reserch.fetchall():
             result.append(row[0])
 
     elif(sort==[0,0,0,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT　no FROM pcap WHERE no=:reserch",{"reserch":row[0]})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:fno",{"fno":row[0]})
             for row in result_no.fetchall():
                 result.append(row[0])
 
@@ -130,73 +132,73 @@ def filter_db(fsrcip,fdstip,fsport,fproco):
             result.append(row[0])
 
     elif(sort==[1,0,1,0]):
-        reserch=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND sport=:fsport",{"fsrcip":fsrcip,"fsport":fsport})
+        reserch=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND sport=:fdport",{"fsrcip":fsrcip,"fdport":fdport})
         for row in reserch.fetchall():
             result.append(row[0])
 
     elif(sort==[1,0,0,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:sno AND srcip=:fsrcip",{"sno":row[0],"fsrcip":fsrcip})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:fno AND srcip=:fsrcip",{"fno":row[0],"fsrcip":fsrcip})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     elif(sort==[0,1,1,0]):
-        reserch=cursor_db.execute("SELECT no FROM pcap WHERE dstip=:fdstip AND sport=:fsport",{"fdstip":fdstip,"fsport":fsport})
+        reserch=cursor_db.execute("SELECT no FROM pcap WHERE dstip=:fdstip AND sport=:fdport",{"fdstip":fdstip,"fdport":fdport})
         for row in reserch.fetchall():
             result.append(row[0])
 
     elif(sort==[0,1,0,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:sno AND dstip=:fdstip",{"sno":row[0],"fdstip":fdstip})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:fno AND dstip=:fdstip",{"fno":row[0],"fdstip":fdstip})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     elif(sort==[0,0,1,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:sno AND sport=:fsport",{"sno":row[0],"fsport":fsport})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:fno AND sport=:fdport",{"fno":row[0],"fdport":fdport})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     elif(sort==[1,1,1,0]):
-        reserch=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND dstip=:fdstip AND sport=:fsport",{"fsrcip":fsrcip,"fdstip":fdstip,"fsport":fsport})
+        reserch=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND dstip=:fdstip AND sport=:fdport",{"fsrcip":fsrcip,"fdstip":fdstip,"fdport":fdport})
         for row in reserch.fetchall():
             result.append(row[0])
 
     elif(sort==[1,1,0,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:sno AND srcip=:fsrcip AND dstip=:fdstip",{"sno":row[0],"fsrcip":fsrcip,"fdstip":fdstip})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE no=:fno AND srcip=:fsrcip AND dstip=:fdstip",{"fno":row[0],"fsrcip":fsrcip,"fdstip":fdstip})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     elif(sort==[1,0,1,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND sport=:fsport AND no=:sno",{"fsrcip":fsrcip,"fsport":fsport,"sno":row[0]})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND sport=:fdport AND no=:fno",{"fsrcip":fsrcip,"fdport":fdport,"fno":row[0]})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     elif(sort==[0,1,1,1]):
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE dstip=:fdstip AND sport=:fsport AND no=:sno",{"fdstip":fdstip,"fsport":fsport,"sno":row[0]})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE dstip=:fdstip AND sport=:fdport AND no=:fno",{"fdstip":fdstip,"fdport":fdport,"fno":row[0]})
             for row in result_no.fetchall():
                 result.append(row[0])
 
     else:
-        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2",{"fproco1":fproco,"fproco2":fproco})
+        reserch=cursor_db.execute("SELECT no FROM stack WHERE layer_second=:fproco1 OR layer_third=:fproco2 OR layer_fourth=:fproco3",{"fproco1":fproco,"fproco2":fproco,"fproco3":fproco})
         reserch_no=reserch.fetchall()
         for row in reserch_no:
-            result_no=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND dstip=:fdstip AND sport=:fsport AND no=:sno",{"fsrcip":fsrcip,"fdstip":fdstip,"fsport":fsport,"sno":row[0]})
+            result_no=cursor_db.execute("SELECT no FROM pcap WHERE srcip=:fsrcip AND dstip=:fdstip AND sport=:fdport AND no=:fno",{"fsrcip":fsrcip,"fdstip":fdstip,"fdport":fdport,"fno":row[0]})
             for row in result_no.fetchall():
                 result.append(row[0])
 

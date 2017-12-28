@@ -55,7 +55,7 @@ def GetProtoType(Packet):
     elif iproto[0]==2:
       pstack.append('igmp');ptype='igmp'
     elif iproto[0]==1:
-      pstack.append('icmp');ptype='icmp4'
+      pstack.append('icmp4');ptype='icmp4'
     else : pstack.append('-1');ptype='ip4'
   elif ethtype[0]==0x806:
     pstack.append('arp')
@@ -82,11 +82,15 @@ def GetProtoType(Packet):
     elif iproto[0]==2:   
       pstack.append('igmp');ptype='igmp'
     elif iproto[0]==58:
-      pstack.append('icmp');ptype='icmp6'
+      pstack.append('icmp6');ptype='icmp6'
     else : pstack.append('-1');ptype='ip6'
   else:pstack.append('-1');pstack.append('-1');ptype='ethernet'
   if not ptype:ptype=pstack[-1]
-  return pstack[:3],ptype,srcport,dstport
+  pstack = pstack[:3]
+  if ptype not in ('udp','tcp','icmp4','icmp6','ethernet','arp','igmp','ip4','ip6'):
+	pstack.append(ptype)
+  else: pstack.append('-1')
+  return pstack,ptype,srcport,dstport
 
 def GetIp(Packet,stack):
   Packet=Packet[14:]
@@ -102,13 +106,15 @@ def GetIp(Packet,stack):
   return srcip,dstip
 
 def GetRecombination(Packet):
-  packet = struct.unpack("!2H",Packet[18:22])
-  identification = packet[0]
-  flag = packet[1]>>13
-  flagoffset = packet[1] & 0x1FFF
+  packet = struct.unpack("!4H",Packet[14:22])
+  headerLenght = ((packet[0] >> 8) & 0x000F)*4+14
+  identification = packet[2]
+  flag = packet[3]>>13
+  flagoffset = packet[3] & 0x1FFF
   DF = (flag>>1) & 0x1
   MF = flag & 0x1
-  return identification,DF,MF,flagoffset
+  return identification,headerLenght,DF,MF,flagoffset
+
 
 if __name__=="__main__":
 		import os
@@ -130,9 +136,9 @@ if __name__=="__main__":
                                 message+=' To: '+dstip
                         if dport!='-1':
                                 message+=': '+str(dport)
-                        #print message
+			print len(stack)
 		#	insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)
  			if 'ip4' in stack and 'ip4' != ptype:
-				identification,DF,MF,flagoffset=GetRecombination(packet)
-				print identification,DF,MF,flagoffset
-				#insert_ip(no,identification,DF,MF,flagoffset)
+				identification,header,DF,MF,flagoffset=GetRecombination(packet)
+				print identification,header,DF,MF,flagoffset
+				#insert_ip(no,identification,header,DF,MF,flagoffset)

@@ -151,7 +151,7 @@
      <item>
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Source tcp/udp Port</string>
+        <string>Destination Port</string>
        </property>
        <property name="buddy">
         <cstring>Destinationport</cstring>
