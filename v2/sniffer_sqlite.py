@@ -5,6 +5,8 @@
 #detail_packet(no)                                          输入序号，返回packet
 #save_txt(file_name)                                        将数据库中除packet外的具体信息输出至指定文件名文件中，raw_input()函数获取用户输入文件名
 #msg_find(msg)												输入查找的字符串，返回包含字符串的包的序号
+#另外增加的函数
+#information_packet                                         从数据库中读取相应packet的详细字段，包括端口号和ip号，用于在报文显示界面显示报文的简略信息
 import sqlite3 as sq
 from prettytable import PrettyTable
 
@@ -30,6 +32,14 @@ def initial_db():
                     layer_second char NOT NULL,
                     layer_third char NOT NULL,
                     layer_fourth char NOT NULL);''')
+
+    cursor_db.execute('''CREATE TABLE ip
+                    (no int NOT NULL,
+                    identification none NOT NULL,
+                    header int NOT NULL,
+                    DF none NOT NULL,
+                    MF none NOT NULL,
+                    flagoffset int NOT NULL);''')
 
     conn_db.commit()
     cursor_db.close()
@@ -59,6 +69,15 @@ def sqlite_start():
                     layer_second char NOT NULL,
                     layer_third char NOT NULL,
                     layer_fourth char NOT NULL);''')
+
+    cursor_db.execute('''CREATE TABLE ip
+                    (no int NOT NULL,
+                    identification none NOT NULL,
+                    header none NOT NULL,
+                    DF none NOT NULL,
+                    MF none NOT NULL,
+                    flagoffset none NOT NULL);''')
+
 
     conn_db.commit()
     cursor_db.close()
@@ -220,18 +239,6 @@ def detail_packet(sno):
 
     return result
 
-def information_packet(sno):
-    conn_db=sq.connect('main.db')
-    cursor_db=conn_db.cursor()
-    conn_db.text_factory=str
-
-    reserch=cursor_db.execute("SELECT srcip,dstip,sport,dport,ptype FROM pcap WHERE no=:sno",{"sno":sno})
-    result=reserch.fetchone()
-    cursor_db.close()
-    conn_db.close()
-
-    return result
-
 def save_txt(file_name):
     conn_db=sq.connect('main.db')
     cursor_db=conn_db.cursor()
@@ -275,3 +282,64 @@ def msg_find(msg):
 
 
     return result
+
+def insert_ip(ino,iidentification,iheader,iDF,iMF,ioffset):
+    conn_db=sq.connect('main.db')
+    cursor_db=conn_db.cursor()
+
+    conn_db.text_factory=str
+
+    cursor_db.execute("INSERT INTO ip VALUES (?,?,?,?,?,?)",(ino,iidentification,iheader,iDF,iMF,ioffset))
+
+    conn_db.commit()
+    cursor_db.close()
+    conn_db.close()
+
+def ip_recombine(rno):
+    conn_db=sq.connect('main.db')
+    cursor_db=conn_db.cursor()
+
+    conn_db.text_factory=str
+
+    reserch1=cursor_db.execute("SELECT identification FROM ip WHERE no=:rno",{"rno":rno})
+    reserch_id=reserch1.fetchone()
+    result_id=reserch_id[0]
+
+    reserch2=cursor_db.execute("SELECT * FROM ip WHERE identification=:result_id",{"result_id":result_id})
+    reserch_ip=reserch2.fetchall()
+
+    packet_recombine=[]
+
+    for row in reserch_ip:
+        reserch=cursor_db.execute("SELECT packet FROM pcap WHERE no=:row0",{"row0":row[0]})
+        reserch_packet=reserch.fetchone()
+        result=reserch_packet[0]
+
+        header=row[2]
+        packet=result[header-1:]
+        length=len(packet)
+        offset=row[5]*8
+
+        if(row[5]==0):
+            packet_recombine[0:(header+length-1)]=result
+        else:
+            packet_recombine[offset:(offset+length-1)]=packet
+
+    conn_db.commit()
+    cursor_db.close()
+    conn_db.close()
+
+    return packet_recombine
+
+def information_packet(sno):
+    conn_db=sq.connect('main.db')
+    cursor_db=conn_db.cursor()
+    conn_db.text_factory=str
+
+    reserch=cursor_db.execute("SELECT srcip,dstip,sport,dport,ptype FROM pcap WHERE no=:sno",{"sno":sno})
+    result=reserch.fetchone()
+    cursor_db.close()
+    conn_db.close()
+
+    return result
+

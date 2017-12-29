@@ -99,6 +99,18 @@ class InitialWindow(QMainWindow,Ui_Capture):
 				a,b,c,d=search_condition
 				self.update_Table(filter_db(a,b,c,d))
 
+	@Slot()
+	def on_RepacketButton_clicked(self):
+                self.DetailViewer.clear()
+		rownumber=self.MainTable.currentRow()
+		try:
+			no = int(self.MainTable.item(rownumber,0).text()) 
+                except AttributeError:message='error!you must choose one row then click IpRecombination button'
+                else:
+			packet=ip_recombine(no)#your function ,where you should deliver a no,return a packet like recombinate_packet(no)
+			message=GetDetail(packet)
+                self.DetailViewer.append(QString(message))
+	
 	def update_Table(self,sequences):
 		self.MainTable.setRowCount(len(sequences))
 		a=0
@@ -130,11 +142,11 @@ class InitialWindow(QMainWindow,Ui_Capture):
                         message=ptype
                         if srcip!='-1':
                         	message+='\tFrom '+srcip
-                        if sport != -1:
+                        if sport != '-1':
                         	message+=':'+str(sport)
                        	if dstip != '-1':
                         	message+=' To: '+dstip
-                        if dport!= -1 :
+                        if dport!= '-1' :
                                 message+=': '+str(dport)
                        	self.MainTable.setRowCount(no)
                         self.MainTable.setItem(no-1,1,QTableWidgetItem(QString(message)))
@@ -144,10 +156,10 @@ class InitialWindow(QMainWindow,Ui_Capture):
 	# this is the function to show the detail of packet message
 	def show_detail(self):
                 self.DetailViewer.clear()
-                
 		rownumber=self.MainTable.currentRow()
-		no = int(self.MainTable.item(rownumber,0).text()) 
-                if no==-1:message='error!you must choose one row then click showdetail button'
+		try:
+			no = int(self.MainTable.item(rownumber,0).text()) 
+                except AttributeError:message='error!you must choose one row then click showdetail button'
                 else:
 			packet=detail_packet(no)[0]
 			message=GetDetail(packet)

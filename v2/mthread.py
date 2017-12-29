@@ -136,9 +136,9 @@ if __name__=="__main__":
                                 message+=' To: '+dstip
                         if dport!='-1':
                                 message+=': '+str(dport)
-			print len(stack)
 		#	insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)
- 			if 'ip4' in stack and 'ip4' != ptype:
+ 			if 'ip4' in stack : 
 				identification,header,DF,MF,flagoffset=GetRecombination(packet)
+				print ptype,
 				print identification,header,DF,MF,flagoffset
 				#insert_ip(no,identification,header,DF,MF,flagoffset)
