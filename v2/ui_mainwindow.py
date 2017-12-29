@@ -46,7 +46,7 @@ class Ui_Capture(object):
         self.Ctime = QtGui.QLabel(self.centralwidget)
         self.Ctime.setObjectName(_fromUtf8("Ctime"))
         self.horizontalLayout_3.addWidget(self.Ctime)
-        spacerItem1 = QtGui.QSpacerItem(420, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem1 = QtGui.QSpacerItem(400, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         self.saveButton = QtGui.QPushButton(self.centralwidget)
         self.saveButton.setObjectName(_fromUtf8("saveButton"))

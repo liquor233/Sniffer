@@ -22,6 +22,7 @@ from mthread import *
 from parser import GetDetail
 from sniffer_sqlite import *
 from interfaces import get_nic_list
+import image
 
 class InitialWindow(QMainWindow,Ui_Capture):
 	def __init__(self,parent=None):
@@ -31,7 +32,7 @@ class InitialWindow(QMainWindow,Ui_Capture):
 		self.CaptureButton.setFocusPolicy(Qt.NoFocus)
         	self.DetailButton.setFocusPolicy(Qt.NoFocus)
         	self.NIChooser.setFocusPolicy(Qt.NoFocus)
-		self.setWindowIcon(QIcon('../icon/mask.ico'))
+		self.setWindowIcon(QIcon(':/icon/mask.ico'))
 		self.NIChooser.addItems(QStringList(get_nic_list()))
 		
 		# to set table
@@ -152,6 +153,10 @@ class InitialWindow(QMainWindow,Ui_Capture):
                         self.MainTable.setItem(no-1,1,QTableWidgetItem(QString(message)))
 			self.MainTable.setItem(no-1,0,QTableWidgetItem(QString(str(no))))
 		        insert_db(no,packet,srcip,dstip,sport,dport,ptype,stack)
+			if 'ip4' in stack :
+                                identification,header,DF,MF,flagoffset=GetRecombination(packet)
+                                insert_ip(no,identification,header,DF,MF,flagoffset)
+
 
 	# this is the function to show the detail of packet message
 	def show_detail(self):

@@ -141,4 +141,4 @@ if __name__=="__main__":
 				identification,header,DF,MF,flagoffset=GetRecombination(packet)
 				print ptype,
 				print identification,header,DF,MF,flagoffset
-				#insert_ip(no,identification,header,DF,MF,flagoffset)
+				insert_ip(no,identification,header,DF,MF,flagoffset)
