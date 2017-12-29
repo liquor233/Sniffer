@@ -184,7 +184,12 @@ class InitialWindow(QMainWindow,Ui_Capture):
 
 if __name__ == "__main__":
 	import sys
+	import os
 	app = QApplication(sys.argv)
     	form = InitialWindow()
 	form.show()
 	app.exec_()
+	try:
+		os.remove("main.db")
+	except OSError:
+		pass
