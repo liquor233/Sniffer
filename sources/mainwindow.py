@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from __future__ import division
-from __future__ import print_function
+#from __future__ import print_function
 from __future__ import unicode_literals
 from future_builtins import *
 
@@ -106,7 +106,7 @@ class InitialWindow(QMainWindow,Ui_Capture):
 		rownumber=self.MainTable.currentRow()
 		try:
 			no = int(self.MainTable.item(rownumber,0).text()) 
-                except AttributeError:message='error!you must choose one row then click IpRecombination button'
+                except AttributeError,TypeError:message='error!you must choose one row then click IpRecombination button'
                 else:
 			packet=ip_recombine(no)#your function ,where you should deliver a no,return a packet like recombinate_packet(no)
 			message=GetDetail(packet)
