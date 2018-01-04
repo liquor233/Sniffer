@@ -1,4 +1,0 @@
-adium-theme-ubuntu==0.3.4
-prettytable==0.7.2
-pygobject==3.20.0
-unity-lens-photos==1.0
