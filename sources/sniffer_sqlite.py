@@ -301,10 +301,14 @@ def ip_recombine(rno):
 
     conn_db.text_factory=str
 
+    reserch=cursor_db.execute("SELECT * FROM ip WHERE no=:rno",{"rno":rno})
+    result=reserch.fetchone()
+    if result==None:
+        return (-1)
+
     reserch1=cursor_db.execute("SELECT identification FROM ip WHERE no=:rno",{"rno":rno})
     reserch_id=reserch1.fetchone()
     result_id=reserch_id[0]
-    print result_id
 
     reserch2=cursor_db.execute("SELECT * FROM ip WHERE identification=:result_id",{"result_id":result_id})
     reserch_ip=reserch2.fetchall()

@@ -138,7 +138,7 @@ def icmp6Header(newPacket):
   return message
 
 def igmpHeader(newPacket):
-  packet = struct.unpack("!BBH4s",newPacket[8:])
+  packet = struct.unpack("!BBH4s",newPacket[:8])
   message= fmt.format("IGMP HEADER")+tag
   message+= "\tType: " + hex(packet[0])+tag
   message+= "\tMaxRespTime: " + str(packet[1])+tag

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from __future__ import division
-#from __future__ import print_function
+from __future__ import print_function
 from __future__ import unicode_literals
 from future_builtins import *
 
@@ -106,11 +106,12 @@ class InitialWindow(QMainWindow,Ui_Capture):
 		rownumber=self.MainTable.currentRow()
 		try:
 			no = int(self.MainTable.item(rownumber,0).text()) 
-                except AttributeError,TypeError:message='error!you must choose one row then click IpRecombination button'
+                except AttributeError:message='error!\nyou must choose one row then click IpRecombination button'
                 else:
-			packet=ip_recombine(no)#your function ,where you should deliver a no,return a packet like recombinate_packet(no)
-			message=GetDetail(packet)
-                self.DetailViewer.append(QString(message))
+			packet=ip_recombine(no)
+			if packet != -1:message=GetDetail(packet)
+                	else: message='error!\nyou can only recombine IP4 packet'
+		self.DetailViewer.append(QString(message))
 	
 	def update_Table(self,sequences):
 		self.MainTable.setRowCount(len(sequences))
@@ -120,11 +121,11 @@ class InitialWindow(QMainWindow,Ui_Capture):
 			message = ptype
 			if srcip!='-1':
                                 message+='\tFrom '+srcip
-                        if sport !='-1':
+                        if sport !=-1:
                                 message+=':'+str(sport)
                         if dstip != '-1':
                                 message+=' To: '+dstip
-                        if dport!='-1':
+                        if dport!=-1:
                                 message+=': '+str(dport)
                         self.MainTable.setItem(a,1,QTableWidgetItem(QString(message)))
                         self.MainTable.setItem(a,0,QTableWidgetItem(QString(str(i))))
@@ -164,7 +165,7 @@ class InitialWindow(QMainWindow,Ui_Capture):
 		rownumber=self.MainTable.currentRow()
 		try:
 			no = int(self.MainTable.item(rownumber,0).text()) 
-                except AttributeError:message='error!you must choose one row then click showdetail button'
+                except AttributeError:message='error!\nyou must choose one row then click showdetail button'
                 else:
 			packet=detail_packet(no)[0]
 			message=GetDetail(packet)
